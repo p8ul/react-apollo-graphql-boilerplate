@@ -1,52 +1,36 @@
-import React, { ChangeEvent, FormEvent } from 'react';
+import { Field, Form, FormikProps } from 'formik';
+import React from 'react';
 
-export interface FormData {
+export interface ILoginProps {
   email: string;
   password: string;
 }
-interface IProps extends FormData {
-  handleLogin: (e: FormEvent) => void;
-  handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
+interface IProps {
+  formBag: FormikProps<ILoginProps>;
 }
 
-const LoginPage: React.FC<IProps> = ({
-  handleLogin,
-  handleChange,
-  email,
-  password,
-}) => {
+const LoginPage: React.FC<IProps> = ({ formBag }) => {
+  const { errors, touched, isSubmitting } = formBag;
   return (
     <div>
-      <form onSubmit={handleLogin}>
+      <Form>
         <div>
-          <div>
-            <label>Email:</label>
-            <input
-              value={email}
-              type='text'
-              name='email'
-              required
-              onChange={handleChange}
-            />
-          </div>
+          <Field type='email' name='email' placeholder='Email' />
+          {errors.email && touched.email ? <div>{errors.email}</div> : null}
         </div>
         <div>
-          <div>
-            <label>Password:</label>
-            <input
-              value={password}
-              type='password'
-              name='password'
-              required
-              onChange={handleChange}
-            />
-          </div>
+          <Field type='password' name='password' placeholder='Password' />
+          {errors.password && touched.password ? (
+            <div>{errors.password}</div>
+          ) : null}
         </div>
-
+        <br />
         <div>
-          <button type='submit'>Submit</button>
+          <button type='submit' disabled={isSubmitting}>
+            Submit
+          </button>
         </div>
-      </form>
+      </Form>
     </div>
   );
 };
